@@ -22,13 +22,14 @@ class SaveUserRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->route('user');
-        $Id = $this->route('id');
+
+        \Log::info('Valor de $Id:', ['Id' => $userId]);
 
         $rules = [
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $Id,
+            'email' => 'required|email|unique:users,email,' . $userId,
             'numero_celular' => 'nullable|digits:10',
-            'cedula' => 'required|string|max:11|unique:users,cedula,' . $Id,
+            'cedula' => 'required|string|max:11|unique:users,cedula,' . $userId,
             'fecha_nacimiento' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             'codigo_ciudad' => 'required|numeric',
         ];
@@ -36,11 +37,6 @@ class SaveUserRequest extends FormRequest
         // Si es una actualización, no requerimos la contraseña
         if ($this->isMethod('put')) {
             unset($rules['password']);
-        }
-
-        // Agrega reglas específicas para la creación
-        if ($this->isMethod('post')) {
-            $rules['password'] = 'required|string|min:8|confirmed';
         }
 
         return $rules;
