@@ -32,6 +32,8 @@ class SaveUserRequest extends FormRequest
             'cedula' => 'required|string|max:11|unique:users,cedula,' . $userId,
             'fecha_nacimiento' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             'codigo_ciudad' => 'required|numeric',
+            'password' => $this->isMethod('post') ? 'required|string|min:8|confirmed' : 'nullable|string|min:8|confirmed',
+
         ];
 
         // Si es una actualización, no requerimos la contraseña

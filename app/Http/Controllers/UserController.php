@@ -27,11 +27,12 @@ class UserController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            \Log::info('Datos validados:', $validatedData);
+            \Log::info('Antes de la creación del usuario');
             $user = User::create($validatedData);
+            \Log::info('Usuario creado exitosamente');            
             return response()->json($user, JsonResponse::HTTP_CREATED);
         } catch (QueryException $e) {
-            return response()->json(['error' => 'Error de la base de datos'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -43,9 +44,10 @@ class UserController extends Controller
             $validatedData = $request->validated();
             \Log::info('Datos validados:', $validatedData);
             $user->update($validatedData);
+            \Log::info('Usuario actualizado exitosamente');  
             return response()->json($user, JsonResponse::HTTP_OK);
         } catch (QueryException $e) {
-            return response()->json(['error' => 'Error de la base de datos'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
